@@ -1,18 +1,97 @@
-
 # GLSL Shader Vision
 
-Carpeta de planificación para construir un visor GLSL animado orientado a Pi Agent.
+Visor WebGL local para shaders GLSL `.frag`, integrado como extensión de [Pi Agent](https://pi.dev). Permite visualizar, animar, ajustar parámetros y generar evidencia visual sin salir del terminal.
 
-El contenido importante está en `docs/`. El proyecto define un visor WebGL local capaz de cargar shaders `.frag`, mostrarlos animados, exponer uniforms como sliders/controles UI, guardar presets y generar evidencia visual para que el agente y el usuario validen el shader antes de usarlo en otro lenguaje o motor.
+## Qué hace
 
-No incluye porting automático. La traducción a Godot/WGSL/HLSL/etc. queda fuera del scope del visor y debe hacerla el agente como una tarea separada después de la validación visual.
+- **Preview animado** de fragment shaders con WebGL
+- **Controles UI** generados desde `.params.json` (sliders, colores, checkboxes, dropdowns)
+- **Presets** para guardar y alternar variantes visuales
+- **Hot reload** al editar `.frag` o `.params.json`
+- **Modo Shadertoy** — detecta `mainImage()` y lo envuelve automáticamente
+- **Probe sheets** — capturas en tiempos fijos con Puppeteer
+- **Canvas configurable** — ratios 1:1, 16:9, 4:3, 9:16, Fit + tamaño máximo
+- **Play / Pause** manual, auto-pausa si la pestaña queda oculta
+- **Errores GLSL** visibles sobre el canvas
 
-Orden sugerido de lectura:
+## Instalación
 
-1. `docs/00_AGENT_BRIEF.md`
-2. `docs/01_PRODUCT_SPEC.md`
-3. `docs/02_ARCHITECTURE.md`
-4. `docs/03_SHADER_CONTRACTS.md`
-5. `docs/04_PARAMS_PRESETS_SCHEMA.md`
-6. `docs/08_IMPLEMENTATION_PLAN.md`
-7. `docs/09_VALIDATION_CHECKLIST.md`
+```bash
+git clone <repo>
+cd glsl-shader-vision
+cd .pi/extensions/glsl-shader-vision && npm install
+```
+
+La extensión se auto-descubre al abrir Pi en este proyecto. Para recargar tras cambios: `/reload`.
+
+## Uso
+
+### Comandos (vos)
+
+```txt
+/glsl-open examples/shaders/pool_wave.frag    → abre preview animado
+/glsl-probe examples/shaders/pool_wave.frag   → genera URLs de captura
+/glsl-state examples/shaders/pool_wave.frag   → estado del server/shader
+```
+
+### Herramientas (el agente las llama solo)
+
+| Tool | Descripción |
+|---|---|
+| `open_glsl_shader_preview` | Abre preview WebGL y devuelve URL |
+| `render_glsl_shader_probe` | Genera contact sheet PNG |
+| `read_glsl_shader_state` | Estado del shader/servidor |
+| `save_glsl_shader_preset` | Guarda valores como preset |
+
+## Ejemplos
+
+| Shader | Descripción |
+|---|---|
+| `pool_wave.frag` | Agua con celdas Voronoi, 3 capas, ruido, pixelado — **14 controles, 3 presets** |
+| `pixel_sea.frag` | Mar pixel art retro con ondas |
+| `water.frag` | Agua con caustics y FBM |
+| `magic_orb.frag` | Orbe mágico animado |
+
+## Estructura
+
+```
+.pi/
+├── extensions/glsl-shader-vision/
+│   ├── index.ts              ← Extensión Pi
+│   ├── package.json
+│   ├── preview-server.mjs    ← Servidor HTTP + API
+│   ├── scripts/render-probe.mjs  ← Puppeteer probe
+│   └── public/               ← Viewer HTML/JS/CSS
+├── skills/glsl-shader-vision/
+│   └── SKILL.md              ← Instrucciones para el agente
+└── glsl-shader-vision/
+    └── output/               ← Probe sheets generados
+
+examples/shaders/             ← Shaders de ejemplo
+docs/                         ← Especificación y plan
+```
+
+## Contrato de archivos
+
+Para `nombre.frag`:
+
+```
+nombre.frag           ← Shader GLSL
+nombre.params.json    ← Controles UI
+nombre.presets.json   ← Variantes guardadas
+```
+
+Sin `.params.json` el shader igual funciona con uniforms base (`u_time`, `u_resolution`, `u_mouse`).
+
+## Requisitos
+
+- Node.js ≥ 18
+- Chrome/Edge para el viewer (WebGL)
+- Puppeteer para probe sheets (se instala con `npm install`)
+
+## No incluido
+
+- Porting automático a Godot/WGSL/HLSL/Unity
+- WebGPU
+- Multipass Shadertoy (Buffers)
+- Editor de código integrado

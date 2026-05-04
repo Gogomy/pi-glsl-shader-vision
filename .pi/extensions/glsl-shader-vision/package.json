@@ -1,12 +1,40 @@
 {
   "name": "glsl-shader-vision",
   "version": "0.1.0",
-  "description": "GLSL fragment shader viewer extension for Pi Agent — live WebGL preview, uniform controls, presets, probe sheets",
   "type": "module",
-  "pi": {
-    "extensions": [
-      "./index.ts"
-    ]
+  "description": "GLSL fragment shader viewer for Pi Agent — live WebGL preview, Tweakpane uniform controls, presets, probe sheets & video export",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/usuario/glsl-shader-vision.git"
+  },
+  "keywords": [
+    "pi",
+    "pi-extension",
+    "pi-package",
+    "pi-skill",
+    "glsl",
+    "shader",
+    "webgl",
+    "shadertoy",
+    "fragment-shader",
+    "preview"
+  ],
+  "author": "",
+  "license": "MIT",
+  "main": "index.ts",
+  "files": [
+    "index.ts",
+    "preview-server.mjs",
+    "scripts/render-probe.mjs",
+    "public/index.html",
+    "public/viewer.js",
+    "public/style.css",
+    "tsconfig.json",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "peerDependencies": {
+    "@mariozechner/pi-coding-agent": "*"
   },
   "dependencies": {
     "chokidar": "^4.0.3",
@@ -15,5 +43,13 @@
   "scripts": {
     "server": "node preview-server.mjs",
     "probe": "node scripts/render-probe.mjs"
+  },
+  "pi": {
+    "extensions": [
+      "./index.ts"
+    ],
+    "skills": [
+      "../../skills/glsl-shader-vision"
+    ]
   }
 }
