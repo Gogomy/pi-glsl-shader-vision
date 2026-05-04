@@ -17,3 +17,11 @@
 - **Skill del agente** — `glsl-shader-vision` con instrucciones de uso
 - **Desactivación de previews viejos** — `BroadcastChannel` entre tabs
 - **Shaders de ejemplo** — `pool_wave.frag` (14 controles, 3 presets), `pixel_sea.frag`, `water.frag`, `magic_orb.frag`
+
+### 2026-05-04 (pre-release fixes)
+
+- Corregidos errores TypeScript (`err as Error`, `details` en `onUpdate`, `.d.mts` para imports)
+- Añadido `typescript@^6.0.3` como devDependency
+- Corregido README: instrucciones de instalación y estructura real del proyecto
+- Corregido `.gitignore`: `docs/` ya no se ignora (estaba mal)
+- Declaraciones de tipos para `preview-server.mjs` y `render-probe.mjs`

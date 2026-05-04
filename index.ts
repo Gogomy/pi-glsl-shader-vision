@@ -89,7 +89,7 @@ export default function glslShaderVision(pi: ExtensionAPI) {
         const url = buildViewerUrl(port, relPath);
         ctx.ui.notify(`GLSL Viewer ready:\n${url}`, "info");
       } catch (err) {
-        ctx.ui.notify(`Failed to start viewer server: ${err.message}`, "error");
+        ctx.ui.notify(`Failed to start viewer server: ${(err as Error).message}`, "error");
       }
     },
   });
@@ -145,7 +145,7 @@ export default function glslShaderVision(pi: ExtensionAPI) {
         const msg = [`Probe URLs for ${parsed.shaderPath} (preset: ${parsed.preset}):`, ...urls].join("\n");
         ctx.ui.notify(msg, "info");
       } catch (err) {
-        ctx.ui.notify(`Failed to start viewer: ${err.message}`, "error");
+        ctx.ui.notify(`Failed to start viewer: ${(err as Error).message}`, "error");
       }
     },
   });
@@ -200,7 +200,7 @@ export default function glslShaderVision(pi: ExtensionAPI) {
         };
       } catch (err) {
         return {
-          content: [{ type: "text", text: `Failed to start preview server: ${err.message}` }],
+          content: [{ type: "text", text: `Failed to start preview server: ${(err as Error).message}` }],
           details: { ok: false, error: "server_error" },
         };
       }
@@ -330,7 +330,7 @@ export default function glslShaderVision(pi: ExtensionAPI) {
       }
 
       try {
-        onUpdate?.({ content: [{ type: "text", text: "Launching headless browser for probe capture..." }] });
+        onUpdate?.({ content: [{ type: "text", text: "Launching headless browser for probe capture..." }], details: {} });
 
         const result = await renderProbe({
           shader: resolved,
@@ -364,9 +364,10 @@ export default function glslShaderVision(pi: ExtensionAPI) {
           },
         };
       } catch (err) {
+        const message = (err as Error).message;
         return {
-          content: [{ type: "text", text: `Probe failed: ${err.message}` }],
-          details: { ok: false, error: "probe_error", message: err.message },
+          content: [{ type: "text", text: `Probe failed: ${message}` }],
+          details: { ok: false, error: "probe_error", message },
         };
       }
     },

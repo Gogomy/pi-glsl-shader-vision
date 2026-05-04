@@ -17,9 +17,9 @@ Visor WebGL local para shaders GLSL `.frag`, integrado como extensión de [Pi Ag
 ## Instalación
 
 ```bash
-git clone <repo>
+git clone https://github.com/gggQ/pi-glsl-shader-vision.git
 cd pi-glsl-shader-vision
-cd .pi/extensions/glsl-shader-vision && npm install
+npm install
 ```
 
 La extensión se auto-descubre al abrir Pi en este proyecto. Para recargar tras cambios: `/reload`.
@@ -55,20 +55,14 @@ La extensión se auto-descubre al abrir Pi en este proyecto. Para recargar tras 
 ## Estructura
 
 ```
-.pi/
-├── extensions/glsl-shader-vision/
-│   ├── index.ts              ← Extensión Pi
-│   ├── package.json
-│   ├── preview-server.mjs    ← Servidor HTTP + API
-│   ├── scripts/render-probe.mjs  ← Puppeteer probe
-│   └── public/               ← Viewer HTML/JS/CSS
-├── skills/glsl-shader-vision/
-│   └── SKILL.md              ← Instrucciones para el agente
-└── glsl-shader-vision/
-    └── output/               ← Probe sheets generados
-
-examples/shaders/             ← Shaders de ejemplo
-docs/                         ← Especificación y plan
+index.ts                     ← Extensión Pi (comandos + tools)
+preview-server.mjs           ← Servidor HTTP + API + chokidar hot reload
+public/                      ← Viewer HTML/JS/CSS (WebGL + Tweakpane)
+scripts/render-probe.mjs     ← Puppeteer headless probe
+skills/glsl-shader-vision/
+  SKILL.md                   ← Skill del agente
+examples/shaders/            ← Shaders de ejemplo (.frag + .params + .presets)
+docs/                        ← Especificación y plan
 ```
 
 ## Contrato de archivos
