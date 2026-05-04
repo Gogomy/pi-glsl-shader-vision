@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.4 (2026-05-04)
+
+### npm package fix
+
+- Added `examples/shaders/pool_wave.*` to `package.json` `files` so the sample shader is included when installing from npm.
+
 ## 0.1.3 (2026-05-04)
 
 ### Example cleanup
