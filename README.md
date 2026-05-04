@@ -19,7 +19,7 @@ Local WebGL viewer for GLSL `.frag` fragment shaders, integrated as a [Pi Agent]
 ## Install
 
 ```bash
-pi install npm:@gogomi/pi-glsl-shader-vision
+pi install "npm:@gogomi/pi-glsl-shader-vision"
 ```
 
 Or manually:
