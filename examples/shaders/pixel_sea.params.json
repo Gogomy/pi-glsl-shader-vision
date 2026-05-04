@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "uniforms": {
+    "u_speed": {
+      "type": "float",
+      "label": "Speed",
+      "default": 1.5,
+      "min": 0.0,
+      "max": 5.0,
+      "step": 0.1,
+      "group": "Animation"
+    },
+    "u_pixel_size": {
+      "type": "float",
+      "label": "Pixel Size",
+      "default": 8.0,
+      "min": 2.0,
+      "max": 32.0,
+      "step": 1.0,
+      "group": "Look"
+    },
+    "u_scale": {
+      "type": "float",
+      "label": "Scale",
+      "default": 1.0,
+      "min": 0.25,
+      "max": 4.0,
+      "step": 0.05,
+      "group": "Look"
+    },
+    "u_res_scale": {
+      "type": "float",
+      "label": "Retro",
+      "default": 1.0,
+      "min": 0.25,
+      "max": 4.0,
+      "step": 0.25,
+      "group": "Look"
+    },
+    "u_ratio": {
+      "type": "float",
+      "label": "Ratio (1:1 / 16:9)",
+      "default": 1.0,
+      "min": 0.3,
+      "max": 3.0,
+      "step": 0.05,
+      "group": "Look"
+    },
+    "u_water_deep": {
+      "type": "color",
+      "label": "Deep Water",
+      "default": [0.05, 0.15, 0.35],
+      "group": "Color"
+    },
+    "u_water_shallow": {
+      "type": "color",
+      "label": "Shallow Water",
+      "default": [0.1, 0.5, 0.8],
+      "group": "Color"
+    }
+  }
+}

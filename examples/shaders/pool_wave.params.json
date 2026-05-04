@@ -1,0 +1,134 @@
+{
+  "version": 1,
+  "uniforms": {
+    "u_speed": {
+      "type": "float",
+      "label": "Speed",
+      "default": 1.2,
+      "min": 0.0,
+      "max": 4.0,
+      "step": 0.05,
+      "group": "Animation"
+    },
+    "u_scale": {
+      "type": "float",
+      "label": "Cell Scale",
+      "default": 4.5,
+      "min": 1.0,
+      "max": 10.0,
+      "step": 0.1,
+      "group": "Look"
+    },
+    "u_line_width": {
+      "type": "float",
+      "label": "Line Width",
+      "default": 0.08,
+      "min": 0.01,
+      "max": 0.25,
+      "step": 0.005,
+      "group": "Look"
+    },
+    "u_wave_strength": {
+      "type": "float",
+      "label": "Wave Strength",
+      "default": 1.0,
+      "min": 0.0,
+      "max": 3.0,
+      "step": 0.05,
+      "group": "Animation"
+    },
+    "u_noise_scale": {
+      "type": "float",
+      "label": "Noise Scale",
+      "default": 2.2,
+      "min": 0.5,
+      "max": 8.0,
+      "step": 0.1,
+      "group": "Look"
+    },
+    "u_noise_strength": {
+      "type": "float",
+      "label": "Noise Strength",
+      "default": 0.8,
+      "min": 0.0,
+      "max": 2.0,
+      "step": 0.05,
+      "group": "Look"
+    },
+    "u_pixel_size": {
+      "type": "float",
+      "label": "Pixel Size",
+      "default": 6.0,
+      "min": 1.0,
+      "max": 24.0,
+      "step": 1.0,
+      "group": "Look"
+    },
+    "u_under_width": {
+      "type": "float",
+      "label": "Under Layer Width",
+      "default": 0.05,
+      "min": 0.0,
+      "max": 0.2,
+      "step": 0.005,
+      "group": "Look"
+    },
+    "u_depth_width": {
+      "type": "float",
+      "label": "Depth Layer Width",
+      "default": 0.06,
+      "min": 0.0,
+      "max": 0.2,
+      "step": 0.005,
+      "group": "Look"
+    },
+    "u_depth_offset": {
+      "type": "float",
+      "label": "Depth Offset",
+      "default": 0.12,
+      "min": 0.0,
+      "max": 0.5,
+      "step": 0.01,
+      "group": "Look"
+    },
+    "u_depth_angle": {
+      "type": "float",
+      "label": "Depth Angle",
+      "default": 2.2,
+      "min": -3.14,
+      "max": 3.14,
+      "step": 0.05,
+      "group": "Animation"
+    },
+    "u_water_color": {
+      "type": "color",
+      "label": "Water",
+      "default": [0.14, 0.61, 0.90],
+      "group": "Color"
+    },
+    "u_shadow_color": {
+      "type": "color",
+      "label": "Shadow",
+      "default": [0.06, 0.45, 0.78],
+      "group": "Color"
+    },
+    "u_depth_color": {
+      "type": "color",
+      "label": "Depth Layer",
+      "default": [0.48, 0.73, 0.94],
+      "group": "Color"
+    },
+    "u_under_color": {
+      "type": "color",
+      "label": "Under Layer",
+      "default": [0.68, 0.86, 0.98],
+      "group": "Color"
+    },
+    "u_line_color": {
+      "type": "color",
+      "label": "Lines",
+      "default": [0.95, 0.98, 1.0],
+      "group": "Color"
+    }
+  }
+}

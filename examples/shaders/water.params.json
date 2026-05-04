@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "uniforms": {
+    "u_speed": {
+      "type": "float",
+      "label": "Speed",
+      "default": 1.0,
+      "min": 0.0,
+      "max": 4.0,
+      "step": 0.05,
+      "group": "Animation"
+    },
+    "u_scale": {
+      "type": "float",
+      "label": "Scale",
+      "default": 1.5,
+      "min": 0.5,
+      "max": 5.0,
+      "step": 0.1,
+      "group": "Look"
+    },
+    "u_distortion": {
+      "type": "float",
+      "label": "Distortion",
+      "default": 0.3,
+      "min": 0.0,
+      "max": 1.0,
+      "step": 0.01,
+      "group": "Look"
+    },
+    "u_color_deep": {
+      "type": "color",
+      "label": "Deep",
+      "default": [0.02, 0.08, 0.25],
+      "group": "Color"
+    },
+    "u_color_shallow": {
+      "type": "color",
+      "label": "Shallow",
+      "default": [0.05, 0.35, 0.55],
+      "group": "Color"
+    },
+    "u_color_caustic": {
+      "type": "color",
+      "label": "Caustics",
+      "default": [0.3, 0.7, 1.0],
+      "group": "Color"
+    }
+  }
+}

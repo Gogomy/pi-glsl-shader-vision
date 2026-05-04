@@ -1,0 +1,19 @@
+{
+  "name": "glsl-shader-vision",
+  "version": "0.1.0",
+  "description": "GLSL fragment shader viewer extension for Pi Agent — live WebGL preview, uniform controls, presets, probe sheets",
+  "type": "module",
+  "pi": {
+    "extensions": [
+      "./index.ts"
+    ]
+  },
+  "dependencies": {
+    "chokidar": "^4.0.3",
+    "puppeteer": "^24.42.0"
+  },
+  "scripts": {
+    "server": "node preview-server.mjs",
+    "probe": "node scripts/render-probe.mjs"
+  }
+}

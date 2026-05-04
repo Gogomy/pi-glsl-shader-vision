@@ -1,0 +1,201 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #1a1a2e;
+  color: #e0e0e0;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-size: 13px;
+}
+
+#app {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+/* ---- Canvas area ---- */
+#canvas-container {
+  flex: 1;
+  position: relative;
+  background: #0f0f1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+#gl-canvas {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  image-rendering: auto;
+}
+
+/* ---- Error overlay ---- */
+#error-overlay {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  padding: 12px 16px;
+  background: rgba(180, 20, 20, 0.92);
+  border-left: 4px solid #ff4444;
+  border-radius: 4px;
+  color: #fff;
+  font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  z-index: 10;
+  backdrop-filter: blur(4px);
+}
+
+#error-overlay.hidden {
+  display: none;
+}
+
+/* ---- Status bar ---- */
+#status-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 4px 10px;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  gap: 16px;
+  font-size: 11px;
+  color: #888;
+  font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+  z-index: 5;
+}
+
+#status-bar span {
+  white-space: nowrap;
+}
+
+/* ---- Sidebar ---- */
+#sidebar {
+  width: 280px;
+  min-width: 280px;
+  background: #16213e;
+  border-left: 1px solid #2a2a4a;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+#sidebar h3 {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #888;
+  padding: 12px 14px 6px;
+  border-bottom: 1px solid #2a2a4a;
+  margin-bottom: 4px;
+}
+
+#info-panel {
+  border-bottom: 1px solid #2a2a4a;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 14px;
+  font-size: 12px;
+}
+
+.info-row label {
+  color: #777;
+  flex-shrink: 0;
+  margin-right: 8px;
+}
+
+.info-row span {
+  color: #ccc;
+  text-align: right;
+  word-break: break-all;
+}
+
+/* Compile status colors */
+.status-ok { color: #4caf50 !important; }
+.status-error { color: #f44336 !important; }
+.status-pending { color: #888 !important; }
+.status-stale { color: #ff9800 !important; }
+
+/* ---- Canvas presets ---- */
+#canvas-presets {
+  border-bottom: 1px solid #2a2a4a;
+}
+
+.preset-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 6px 14px;
+}
+
+.preset-buttons button {
+  flex: 1;
+  min-width: 38px;
+  padding: 4px 6px;
+  background: #1a1a2e;
+  color: #888;
+  border: 1px solid #2a2a4a;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 10px;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+
+.preset-buttons button:hover {
+  background: #2a2a4a;
+  color: #ccc;
+}
+
+.preset-buttons button.active {
+  background: #4a4a8a;
+  color: #fff;
+  border-color: #6a6aaa;
+}
+
+.playback-row {
+  padding: 6px 14px 0;
+}
+
+.playback-btn {
+  width: 100%;
+  padding: 6px 10px;
+  background: #1a1a2e;
+  color: #ddd;
+  border: 1px solid #2a2a4a;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.playback-btn:hover {
+  background: #2a2a4a;
+}
+
+.playback-btn.paused {
+  background: #4a4a8a;
+  color: #fff;
+  border-color: #6a6aaa;
+}
+
+/* ---- Params panel (Phase 2) ---- */
+#params-panel {
+  flex: 1;
+  overflow-y: auto;
+}

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GLSL Shader Vision</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Main canvas area -->
+    <div id="canvas-container">
+      <canvas id="gl-canvas"></canvas>
+      <div id="error-overlay" class="hidden"></div>
+      <div id="status-bar">
+        <span id="fps">0 FPS</span>
+        <span id="time-display">t=0.00s</span>
+        <span id="resolution-display"></span>
+      </div>
+    </div>
+
+    <!-- Sidebar: info + future params panel -->
+    <aside id="sidebar">
+      <div id="info-panel">
+        <h3>Shader Info</h3>
+        <div class="info-row"><label>Path:</label> <span id="shader-path">—</span></div>
+        <div class="info-row"><label>Status:</label> <span id="compile-status" class="status-pending">—</span></div>
+        <div class="info-row"><label>Mode:</label> <span id="shader-mode">—</span></div>
+        <div class="info-row"><label>Frame:</label> <span id="frame-count">0</span></div>
+      </div>
+
+      <div id="canvas-presets">
+        <h3>Canvas</h3>
+        <div class="preset-buttons">
+          <button data-ratio="auto" class="active">Fit</button>
+          <button data-ratio="1">1:1</button>
+          <button data-ratio="1.777">16:9</button>
+          <button data-ratio="1.333">4:3</button>
+          <button data-ratio="0.562">9:16</button>
+        </div>
+        <div class="playback-row">
+          <button id="play-pause-btn" class="playback-btn">Pause</button>
+        </div>
+        <div class="info-row" style="margin-top:6px;"><label>Size:</label> <span id="canvas-size">—</span></div>
+      </div>
+
+      <div id="params-panel">
+        <!-- Populated by Tweakpane in Phase 2 -->
+      </div>
+    </aside>
+  </div>
+
+  <!-- Tweakpane v3: parameter UI -->
+  <script src="https://cdn.jsdelivr.net/npm/tweakpane@3.1.10/dist/tweakpane.min.js"></script>
+  <script src="/viewer.js"></script>
+</body>
+</html>
