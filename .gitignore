@@ -1,4 +1,5 @@
 node_modules/
+docs/
 .pi/glsl-shader-vision/output/
 .pi/glsl-shader-vision/state/
 .pi/
