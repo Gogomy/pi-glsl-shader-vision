@@ -219,7 +219,7 @@ async function init() {
 
 
 // ─── Canvas ratio control ─────────────────────────────────
-let canvasRatio = null; // null = auto (fit container), number = fixed ratio
+let canvasRatio = 1; // default 1:1
 const canvasSizeEl = document.getElementById("canvas-size");
 
 document.querySelectorAll(".preset-buttons button").forEach((btn) => {
@@ -227,7 +227,7 @@ document.querySelectorAll(".preset-buttons button").forEach((btn) => {
     document.querySelectorAll(".preset-buttons button").forEach((b) => b.classList.remove("active"));
     btn.classList.add("active");
     const ratio = btn.dataset.ratio;
-    canvasRatio = ratio === "auto" ? null : parseFloat(ratio);
+    canvasRatio = parseFloat(ratio);
     handleResize();
   });
 });

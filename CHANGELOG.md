@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.7 (2026-05-04)
+
+### Canvas presets
+
+- Removed `Fit` canvas option from viewer presets.
+- Set default canvas ratio to `1:1`.
+
 ## 0.1.6 (2026-05-04)
 
 ### Preset management
