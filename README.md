@@ -18,7 +18,7 @@ Visor WebGL local para shaders GLSL `.frag`, integrado como extensión de [Pi Ag
 
 ```bash
 git clone <repo>
-cd glsl-shader-vision
+cd pi-glsl-shader-vision
 cd .pi/extensions/glsl-shader-vision && npm install
 ```
 
