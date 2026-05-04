@@ -5,7 +5,7 @@
   "description": "GLSL fragment shader viewer for Pi Agent — live WebGL preview, Tweakpane uniform controls, presets, probe sheets & video export",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gggQ/pi-glsl-shader-vision.git"
+    "url": "git+https://github.com/Gogomy/pi-glsl-shader-vision.git"
   },
   "keywords": [
     "pi",
