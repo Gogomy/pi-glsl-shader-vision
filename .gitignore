@@ -2,3 +2,4 @@ node_modules/
 .pi/glsl-shader-vision/output/
 .pi/glsl-shader-vision/state/
 docs/
+.pi/

@@ -21,8 +21,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC_DIR = path.join(__dirname, "public");
 const DEFAULT_PORT = 5177;
 
-// Project root: 3 levels up from .pi/extensions/glsl-shader-vision/
-const PROJECT_ROOT = path.resolve(__dirname, "..", "..", "..");
+// Project root is the repo root (same as __dirname now)
+const PROJECT_ROOT = __dirname;
 
 // MIME types for static files
 const MIME_TYPES = {

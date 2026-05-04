@@ -20,9 +20,9 @@ import { startServer } from "../preview-server.mjs";
 
 // ─── Configuration ──────────────────────────────────────────
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const EXT_DIR = path.resolve(__dirname, "..");
-const OUTPUT_DIR = path.resolve(EXT_DIR, "..", "..", "glsl-shader-vision", "output");
-const STATE_DIR = path.resolve(EXT_DIR, "..", "..", "glsl-shader-vision", "state");
+const REPO_ROOT = path.resolve(__dirname, "..");
+const OUTPUT_DIR = path.resolve(REPO_ROOT, ".pi", "glsl-shader-vision", "output");
+const STATE_DIR = path.resolve(REPO_ROOT, ".pi", "glsl-shader-vision", "state");
 
 // ─── Main (exported for extension use) ─────────────────────
 

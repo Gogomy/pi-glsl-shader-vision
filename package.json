@@ -49,7 +49,7 @@
       "./index.ts"
     ],
     "skills": [
-      "../../skills/glsl-shader-vision"
+      "./skills/glsl-shader-vision"
     ]
   }
 }
