@@ -645,6 +645,13 @@ function addPresetUI(rootPane) {
     saveCurrentPreset(name);
   });
 
+  // Delete button
+  presetFolder.addButton({ title: "Delete Preset" }).on("click", async () => {
+    const selected = presetState.selected;
+    if (!selected || selected === "(none)") return;
+    await deletePreset(selected);
+  });
+
   // Reset to defaults
   presetFolder.addButton({ title: "Reset Defaults" }).on("click", () => {
     resetToDefaults();
@@ -791,6 +798,42 @@ async function saveCurrentPreset(presetName) {
     }
   } catch (e) {
     console.error("Failed to save preset:", e.message);
+  }
+}
+
+async function deletePreset(presetName) {
+  if (!currentShaderPath || !presetName) return;
+
+  try {
+    const resp = await fetch("/api/presets/delete", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        shader_path: currentShaderPath,
+        preset_name: presetName,
+      }),
+    });
+
+    if (!resp.ok) {
+      console.warn(`Failed to delete preset \"${presetName}\"`);
+      return;
+    }
+
+    delete availablePresets[presetName];
+    if (activePresetName === presetName) {
+      const names = Object.keys(availablePresets);
+      activePresetName = availablePresets.default ? "default" : (names[0] || "default");
+      if (availablePresets[activePresetName]) {
+        applyPreset(availablePresets[activePresetName]);
+      } else {
+        resetToDefaults();
+      }
+    }
+
+    rebuildPresetDropdown();
+    if (manualPaused && !probeMode && !previewSuperseded) renderOneFrame(performance.now());
+  } catch (e) {
+    console.error("Failed to delete preset:", e.message);
   }
 }
 

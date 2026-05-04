@@ -226,6 +226,73 @@ async function savePreset(req, res) {
   }
 }
 
+async function deletePreset(req, res) {
+  let body = "";
+
+  try {
+    body = await new Promise((resolve, reject) => {
+      let data = "";
+      req.on("data", (chunk) => { data += chunk; });
+      req.on("end", () => resolve(data));
+      req.on("error", reject);
+    });
+
+    const payload = JSON.parse(body);
+    const { shader_path, preset_name } = payload;
+
+    if (!shader_path || !preset_name) {
+      res.writeHead(400);
+      res.end("Missing required fields: shader_path, preset_name");
+      return;
+    }
+
+    const base = shader_path.replace(/\.frag$/, "");
+    const presetsPath = resolveShaderPath(`${base}.presets.json`);
+    if (!presetsPath) {
+      res.writeHead(400);
+      res.end("Invalid shader path");
+      return;
+    }
+
+    let doc;
+    try {
+      const raw = await fs.readFile(presetsPath, "utf-8");
+      doc = JSON.parse(raw);
+    } catch {
+      res.writeHead(404);
+      res.end("Presets file not found");
+      return;
+    }
+
+    if (!doc.presets || !doc.presets[preset_name]) {
+      res.writeHead(404);
+      res.end("Preset not found");
+      return;
+    }
+
+    delete doc.presets[preset_name];
+
+    const names = Object.keys(doc.presets);
+    if (doc.active === preset_name) {
+      doc.active = doc.presets.default ? "default" : (names[0] || "default");
+    }
+
+    await fs.writeFile(presetsPath, JSON.stringify(doc, null, 2), "utf-8");
+
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ ok: true, active: doc.active, presets: names }));
+  } catch (err) {
+    if (err instanceof SyntaxError) {
+      res.writeHead(400);
+      res.end(`Invalid JSON: ${err.message}`);
+    } else {
+      res.writeHead(500);
+      res.end("Error deleting preset");
+      console.error("Delete preset error:", err.message);
+    }
+  }
+}
+
 // ─── File watching (hot reload signal) ───────────────────────
 
 function startWatcher(shaderPath) {
@@ -353,6 +420,11 @@ async function handleRequest(req, res) {
   // ── API: Save preset ──
   if (pathname === "/api/presets/save" && req.method === "POST") {
     return savePreset(req, res);
+  }
+
+  // ── API: Delete preset ──
+  if (pathname === "/api/presets/delete" && req.method === "POST") {
+    return deletePreset(req, res);
   }
 
   // ── 404 ──

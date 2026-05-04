@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "active": "cascada",
+  "active": "default",
   "presets": {
     "default": {
       "u_speed": 1.2,
@@ -114,44 +114,6 @@
         0.8,
         0.9,
         0.95
-      ]
-    },
-    "cascada": {
-      "u_speed": 1.2,
-      "u_wave_strength": 1,
-      "u_depth_angle": 2.2,
-      "u_scale": 4.5,
-      "u_line_width": 0.11,
-      "u_noise_scale": 2.2,
-      "u_noise_strength": 0.8,
-      "u_pixel_size": 6,
-      "u_under_width": 0.05,
-      "u_depth_width": 0.06,
-      "u_depth_offset": 0.12,
-      "u_water_color": [
-        0,
-        0.029374905636436112,
-        0.04749984741210937
-      ],
-      "u_shadow_color": [
-        0.06,
-        0.45,
-        0.78
-      ],
-      "u_depth_color": [
-        0.48,
-        0.73,
-        0.94
-      ],
-      "u_under_color": [
-        0.68,
-        0.86,
-        0.98
-      ],
-      "u_line_color": [
-        0.95,
-        0.98,
-        1
       ]
     }
   }

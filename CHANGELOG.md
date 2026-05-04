@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.6 (2026-05-04)
+
+### Preset management
+
+- Added preset deletion in viewer (`Delete Preset` button).
+- Added server endpoint `POST /api/presets/delete`.
+- Removed `cascada` preset from bundled `pool_wave.presets.json` and set active preset to `default`.
+
 ## 0.1.5 (2026-05-04)
 
 ### UX command
