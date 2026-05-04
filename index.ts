@@ -14,6 +14,7 @@ import { renderProbe } from "./scripts/render-probe.mjs";
 import type { Server } from "node:http";
 import fs from "node:fs/promises";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 // ─── Server management ──────────────────────────────────────
 let serverInstance: Server | null = null;
@@ -60,6 +61,10 @@ function buildViewerUrl(port: number, shaderRelPath: string, extra: Record<strin
   return `http://127.0.0.1:${port}/?${params.toString()}`;
 }
 
+const EXTENSION_ROOT = path.dirname(fileURLToPath(import.meta.url));
+const BUNDLED_TEST_SHADER_REL = "examples/shaders/pool_wave.frag";
+const BUNDLED_TEST_SHADER_ABS = path.join(EXTENSION_ROOT, BUNDLED_TEST_SHADER_REL);
+
 // ─── Extension ──────────────────────────────────────────────
 
 export default function glslShaderVision(pi: ExtensionAPI) {
@@ -88,6 +93,26 @@ export default function glslShaderVision(pi: ExtensionAPI) {
         const port = await ensureServer();
         const url = buildViewerUrl(port, relPath);
         ctx.ui.notify(`GLSL Viewer ready:\n${url}`, "info");
+      } catch (err) {
+        ctx.ui.notify(`Failed to start viewer server: ${(err as Error).message}`, "error");
+      }
+    },
+  });
+
+  pi.registerCommand("glsl-test", {
+    description: "Open bundled test shader (pool_wave) from the installed package",
+    handler: async (_args, ctx) => {
+      try {
+        await fs.access(BUNDLED_TEST_SHADER_ABS);
+      } catch {
+        ctx.ui.notify(`Bundled test shader not found: ${BUNDLED_TEST_SHADER_ABS}`, "error");
+        return;
+      }
+
+      try {
+        const port = await ensureServer();
+        const url = buildViewerUrl(port, BUNDLED_TEST_SHADER_REL);
+        ctx.ui.notify(`GLSL test shader ready:\n${url}`, "info");
       } catch (err) {
         ctx.ui.notify(`Failed to start viewer server: ${(err as Error).message}`, "error");
       }

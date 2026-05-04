@@ -37,7 +37,8 @@ Reload Pi after install: `/reload`
 ### Slash Commands (you)
 
 ```txt
-/glsl-open examples/shaders/pool_wave.frag    → open animated preview
+/glsl-test                                   → open bundled pool_wave test shader
+/glsl-open examples/shaders/pool_wave.frag    → open animated preview (local path)
 /glsl-probe examples/shaders/pool_wave.frag   → generate capture URLs
 /glsl-state examples/shaders/pool_wave.frag   → server/shader status
 ```

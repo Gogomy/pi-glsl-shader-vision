@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.5 (2026-05-04)
+
+### UX command
+
+- Added `/glsl-test` command to open bundled `pool_wave` example directly from the installed npm package (no manual path needed).
+
 ## 0.1.4 (2026-05-04)
 
 ### npm package fix
