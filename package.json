@@ -1,6 +1,6 @@
 {
   "name": "@gogomi/pi-glsl-shader-vision",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "type": "module",
   "description": "GLSL fragment shader viewer for Pi Agent — live WebGL preview, Tweakpane uniform controls, presets, probe sheets & video export",
   "repository": {

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.3 (2026-05-04)
+
+### Example cleanup
+
+- Removed all example shaders except `examples/shaders/pool_wave.*`
+- Updated README examples section to keep only `pool_wave.frag`
+
 ## 0.1.0 (2026-05-04)
 
 ### MVP inicial

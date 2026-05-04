@@ -44,21 +44,18 @@ Reload Pi after install: `/reload`
 
 ### Agent Tools (called automatically by the agent)
 
-| Tool | Description |
-|---|---|
+| Tool                       | Description                       |
+| -------------------------- | --------------------------------- |
 | `open_glsl_shader_preview` | Open WebGL preview and return URL |
-| `render_glsl_shader_probe` | Generate contact sheet PNG |
-| `read_glsl_shader_state` | Check shader/server state |
-| `save_glsl_shader_preset` | Save uniform values as preset |
+| `render_glsl_shader_probe` | Generate contact sheet PNG        |
+| `read_glsl_shader_state`   | Check shader/server state         |
+| `save_glsl_shader_preset`  | Save uniform values as preset     |
 
 ## Examples
 
-| Shader | Description |
-|---|---|
+| Shader           | Description                                                                  |
+| ---------------- | ---------------------------------------------------------------------------- |
 | `pool_wave.frag` | Voronoi-based water, 3 layers, noise, pixelated — **14 controls, 3 presets** |
-| `pixel_sea.frag` | Retro pixel-art sea with waves |
-| `water.frag` | Caustics + FBM water |
-| `magic_orb.frag` | Animated magical orb |
 
 ## Structure
 
@@ -90,10 +87,3 @@ Without `.params.json`, the shader still works with base uniforms (`u_time`, `u_
 - Node.js ≥ 18
 - Chrome/Edge for the viewer (WebGL)
 - Puppeteer for probe sheets (installed with `npm install`)
-
-## Not Included
-
-- Automatic porting to Godot/WGSL/HLSL/Unity
-- WebGPU
-- Multipass Shadertoy (Buffers)
-- Built-in code editor
