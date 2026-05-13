@@ -21,8 +21,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC_DIR = path.join(__dirname, "public");
 const DEFAULT_PORT = 5177;
 
-// Project root is the repo root (same as __dirname now)
-const PROJECT_ROOT = __dirname;
+// Project root — dynamically configurable via startServer().
+// Fallback to process.cwd() so CLI usage still works.
+let PROJECT_ROOT = process.cwd();
 
 // MIME types for static files
 const MIME_TYPES = {
@@ -39,28 +40,45 @@ const MIME_TYPES = {
 // ─── Server state ────────────────────────────────────────────
 let watcher = null;
 const changeListeners = new Set();
+let PROJECT_ROOT_OVERRIDE = null;
+
+function getProjectRoot() {
+  return PROJECT_ROOT_OVERRIDE || PROJECT_ROOT;
+}
 
 // ─── Path helpers ────────────────────────────────────────────
 
 /**
- * Resolve a user-provided shader path to an absolute path within the project.
- * Block path traversal (../ outside project root).
+ * Resolve a user-provided shader path to an absolute path.
+ *
+ * - Relative paths are resolved against the configured project root (user's cwd).
+ * - Absolute paths are accepted directly with a security check ensuring they
+ *   stay within allowed roots (project root OR the extension's own directory,
+ *   for bundled shaders like pool_wave.frag).
+ *
+ * Block path traversal (../ outside allowed roots).
  */
 function resolveShaderPath(shaderPath) {
   if (!shaderPath || typeof shaderPath !== "string") {
     return null;
   }
 
-  // Reject absolute paths — only relative paths within project
+  let resolved;
   if (path.isAbsolute(shaderPath)) {
-    return null;
+    resolved = path.resolve(shaderPath);
+  } else {
+    resolved = path.resolve(getProjectRoot(), shaderPath);
   }
 
-  const resolved = path.resolve(PROJECT_ROOT, shaderPath);
+  // Security: ensure resolved path stays within allowed roots
+  // (project root for user shaders, extension dir for bundled shaders)
+  const allowedRoots = [getProjectRoot(), __dirname];
+  const isAllowed = allowedRoots.some((root) => {
+    const rel = path.relative(root, resolved);
+    return !rel.startsWith("..") && !path.isAbsolute(rel);
+  });
 
-  // Security: ensure resolved path stays within project root
-  const rel = path.relative(PROJECT_ROOT, resolved);
-  if (rel.startsWith("..") || path.isAbsolute(rel)) {
+  if (!isAllowed) {
     return null;
   }
 
@@ -296,6 +314,7 @@ async function deletePreset(req, res) {
 // ─── File watching (hot reload signal) ───────────────────────
 
 function startWatcher(shaderPath) {
+  const root = getProjectRoot();
   const resolved = resolveShaderPath(shaderPath);
   if (!resolved) return;
 
@@ -308,8 +327,8 @@ function startWatcher(shaderPath) {
   const base = shaderPath.replace(/\.frag$/, "");
   const patterns = [
     resolved,
-    path.resolve(PROJECT_ROOT, `${base}.params.json`),
-    path.resolve(PROJECT_ROOT, `${base}.presets.json`),
+    path.resolve(root, `${base}.params.json`),
+    path.resolve(root, `${base}.presets.json`),
   ];
 
   watcher = chokidar.watch(patterns, {
@@ -318,7 +337,7 @@ function startWatcher(shaderPath) {
   });
 
   watcher.on("change", (filePath) => {
-    console.log(`[watcher] File changed: ${path.relative(PROJECT_ROOT, filePath)}`);
+    console.log(`[watcher] File changed: ${path.relative(root, filePath)}`);
     for (const listener of changeListeners) {
       try { listener(filePath); } catch {}
     }
@@ -359,6 +378,7 @@ async function handleRequest(req, res) {
 
   // ── API: Events (SSE for hot reload) ──
   if (pathname === "/api/events" && req.method === "GET") {
+    const root = getProjectRoot();
     res.writeHead(200, {
       "Content-Type": "text/event-stream",
       "Cache-Control": "no-cache",
@@ -366,7 +386,7 @@ async function handleRequest(req, res) {
     });
 
     const listener = (filePath) => {
-      const rel = path.relative(PROJECT_ROOT, filePath);
+      const rel = path.relative(root, filePath);
       res.write(`data: ${JSON.stringify({ changed: rel })}\n\n`);
     };
 
@@ -434,8 +454,16 @@ async function handleRequest(req, res) {
 
 // ─── Startup ─────────────────────────────────────────────────
 
-async function startServer(port) {
+async function startServer(port, projectRoot) {
   const server = http.createServer(handleRequest);
+
+  // Set project root — if provided, use it; otherwise resolve from the
+  // shader that will be served, or fall back to process.cwd().
+  if (projectRoot) {
+    PROJECT_ROOT_OVERRIDE = projectRoot;
+  }
+
+  const root = getProjectRoot();
 
   return new Promise((resolve, reject) => {
     server.on("error", (err) => {
@@ -451,7 +479,7 @@ async function startServer(port) {
       const addr = server.address();
       const actualPort = typeof addr === "object" ? addr.port : port;
       console.log(`[glsl-shader-vision] Server running at http://127.0.0.1:${actualPort}`);
-      console.log(`[glsl-shader-vision] Project root: ${PROJECT_ROOT}`);
+      console.log(`[glsl-shader-vision] Project root: ${root}`);
       resolve({ server, port: actualPort });
     });
   });
@@ -463,15 +491,19 @@ const __filename = fileURLToPath(import.meta.url);
 if (process.argv[1] === __filename) {
   const args = process.argv.slice(2);
   let port = DEFAULT_PORT;
+  let cliCwd;
 
   for (let i = 0; i < args.length; i++) {
     if (args[i] === "--port" && args[i + 1]) {
       port = parseInt(args[i + 1], 10);
       i++;
+    } else if (args[i] === "--cwd" && args[i + 1]) {
+      cliCwd = path.resolve(args[i + 1]);
+      i++;
     }
   }
 
-  const { server, port: actualPort } = await startServer(port);
+  const { server, port: actualPort } = await startServer(port, cliCwd);
 
   process.on("SIGINT", () => {
     console.log("\n[glsl-shader-vision] Shutting down...");
@@ -487,4 +519,4 @@ if (process.argv[1] === __filename) {
   });
 }
 
-export { startServer, resolveShaderPath, PROJECT_ROOT };
+export { startServer, resolveShaderPath, getProjectRoot };

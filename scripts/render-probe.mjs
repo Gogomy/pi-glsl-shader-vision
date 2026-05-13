@@ -32,13 +32,14 @@ async function renderProbe(options) {
   const preset = options.preset || "default";
   const width = options.width || 512;
   const height = options.height || 512;
+  const projectRoot = options.projectRoot;
 
   // Ensure output dirs
   await fs.mkdir(OUTPUT_DIR, { recursive: true });
   await fs.mkdir(STATE_DIR, { recursive: true });
 
-  // Start server
-  const { server, port } = await startServer(5177);
+  // Start server with project root for correct path resolution
+  const { server, port } = await startServer(5177, projectRoot);
 
   let browser;
   try {

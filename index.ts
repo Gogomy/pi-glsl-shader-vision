@@ -20,12 +20,12 @@ import { fileURLToPath } from "node:url";
 let serverInstance: Server | null = null;
 let serverPort: number | null = null;
 
-async function ensureServer(): Promise<number> {
+async function ensureServer(cwd?: string): Promise<number> {
   if (serverPort !== null && serverInstance?.listening) {
     return serverPort;
   }
 
-  const { server, port } = await startServer(5177);
+  const { server, port } = await startServer(5177, cwd);
   serverInstance = server;
   serverPort = port;
   return port;
@@ -90,7 +90,7 @@ export default function glslShaderVision(pi: ExtensionAPI) {
       }
 
       try {
-        const port = await ensureServer();
+        const port = await ensureServer(ctx.cwd);
         const url = buildViewerUrl(port, relPath);
         ctx.ui.notify(`GLSL Viewer ready:\n${url}`, "info");
       } catch (err) {
@@ -110,8 +110,9 @@ export default function glslShaderVision(pi: ExtensionAPI) {
       }
 
       try {
-        const port = await ensureServer();
-        const url = buildViewerUrl(port, BUNDLED_TEST_SHADER_REL);
+        const port = await ensureServer(ctx.cwd);
+        // Use absolute path so the server resolves it from the extension dir
+        const url = buildViewerUrl(port, BUNDLED_TEST_SHADER_ABS);
         ctx.ui.notify(`GLSL test shader ready:\n${url}`, "info");
       } catch (err) {
         ctx.ui.notify(`Failed to start viewer server: ${(err as Error).message}`, "error");
@@ -161,7 +162,7 @@ export default function glslShaderVision(pi: ExtensionAPI) {
       }
 
       try {
-        const port = await ensureServer();
+        const port = await ensureServer(ctx.cwd);
         const times = parsed.times.length > 0 ? parsed.times : [0, 0.5, 1, 2, 4];
         const urls = times.map(
           (t) => buildViewerUrl(port, relPath, { time: String(t), preset: parsed.preset, paused: "1" })
@@ -206,7 +207,7 @@ export default function glslShaderVision(pi: ExtensionAPI) {
       }
 
       try {
-        const port = await ensureServer();
+        const port = await ensureServer(ctx.cwd);
         const url = buildViewerUrl(port, relPath);
 
         return {
@@ -361,6 +362,7 @@ export default function glslShaderVision(pi: ExtensionAPI) {
           shader: resolved,
           times: params.times,
           preset: params.preset,
+          projectRoot: ctx.cwd,
         });
 
         const relImage = path.relative(ctx.cwd, result.image_path);

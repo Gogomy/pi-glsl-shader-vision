@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.8 (2026-05-13)
+
+### Bug fix
+
+- **Fixed 404 "Shader not found"** — el servidor de preview resolvía rutas contra su propio `__dirname` en lugar del directorio del proyecto (`ctx.cwd`). Ahora acepta `projectRoot` configurable y también rutas absolutas para shaders bundled.
+  - `preview-server.mjs`: `resolveShaderPath()` ahora usa `getProjectRoot()` dinámico y acepta rutas absolutas con verificación de seguridad.
+  - `index.ts`: `ensureServer()` pasa `ctx.cwd` al servidor. `glsl-test` usa ruta absoluta para el shader bundled.
+  - `render-probe.mjs`: acepta `projectRoot` y lo pasa a `startServer()`.
+  - Ver `glsl-shader-vision-bug.md` para el reporte completo.
+
 ## 0.1.7 (2026-05-04)
 
 ### Canvas presets
