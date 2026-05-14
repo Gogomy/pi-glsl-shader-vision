@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.1.11 (2026-05-13)
+
+### Skill improvements (post-mortem from shader-error-report.md)
+
+- **Added `precision highp float;`** to the Base uniforms Local mode template — WebGL fragment shaders require it, and omitting it was the #1 compile error for new shaders.
+- **Expanded Workflow** into 4 steps:
+  - Step 0 — Before writing: decide what the user can control, plan uniforms and params.
+  - Step 1 — Write and open: compile loop.
+  - Step 2 — Verify interactivity: confirm `.params.json` exists, every custom uniform has a control.
+  - Step 3 — Visual evidence and report.
+- **Added Minimal complete example** section with a 15-line `example.frag` + `example.params.json` showing the full contract (`precision`, uniforms, params, groups).
+- **Added reference** to `examples/shaders/pool_wave.frag` for complex multi-uniform shaders.
+- Removed obsolete `glsl-shader-vision-bug.md` (superseded by `shader-error-report.md`).
+
 ## 0.1.8 (2026-05-13)
 
 ### Bug fix

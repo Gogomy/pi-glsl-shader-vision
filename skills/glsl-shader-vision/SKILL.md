@@ -1,6 +1,7 @@
 ---
 name: glsl-shader-vision
-description: Use when creating, editing, previewing, debugging, animating, testing, or visually validating GLSL/WebGL/Shadertoy fragment shaders. Provides workflow instructions for using the Pi GLSL Shader Vision extension with live animated preview, UI sliders for uniforms, presets, compile-error diagnosis, screenshots, probe sheets, and short video exports. This skill does not perform shader-language translation; translation should be handled separately after visual validation.
+description: >-
+  Use when creating, editing, previewing, debugging, animating, testing, or visually validating GLSL/WebGL/Shadertoy fragment shaders. Provides workflow instructions for using the Pi GLSL Shader Vision extension with live animated preview, UI sliders for uniforms, presets, compile-error diagnosis, screenshots, probe sheets, and short video exports. This skill does not perform shader-language translation; translation should be handled separately after visual validation.
 ---
 
 # GLSL Shader Vision
@@ -27,13 +28,34 @@ Not allowed inside this skill/tool:
 
 ## Workflow
 
+### Step 0 — Before writing any shader
+
+Decide what the user can control:
+- What parameters should be adjustable? (speed, color, intensity, scale, etc.)
+- Does every adjustable parameter have a corresponding `uniform` in the shader?
+- Will there be a `name.params.json` with an entry for each custom uniform?
+- Does the shader start with `precision highp float;`?
+
+### Step 1 — Write and open
+
 After editing a `.frag` shader:
 
-1. Run the GLSL Shader Vision extension.
+1. Run the GLSL Shader Vision extension (`/glsl-open <shader.frag>`).
 2. Check compile status.
 3. If compile fails, fix the shader using the exact GLSL error.
-4. If compile succeeds, generate visual evidence when useful.
-5. Report shader path, active preset, compile status, and output artifact paths.
+
+### Step 2 — Verify interactivity (post-compile)
+
+After the shader compiles successfully:
+
+1. Confirm `name.params.json` exists alongside the shader.
+2. Verify every custom `uniform` in the shader has a matching entry in the params file.
+3. If the shader is creative/visual and has zero custom uniforms, ask: *should the user be able to tweak anything?* If yes, add uniforms and a params file.
+
+### Step 3 — Visual evidence and report
+
+1. If compile succeeds, generate visual evidence when useful (probe sheet, screenshot, video).
+2. Report shader path, active preset, compile status, and output artifact paths.
 
 ## Commands
 
@@ -61,6 +83,8 @@ Use `name.params.json` for UI controls and `name.presets.json` for approved visu
 Local mode:
 
 ```glsl
+precision highp float;
+
 uniform vec2 u_resolution;
 uniform vec2 u_mouse;
 uniform float u_time;
@@ -77,6 +101,58 @@ uniform float iTimeDelta;
 uniform int iFrame;
 uniform vec4 iMouse;
 ```
+
+## Minimal complete example
+
+A working shader with two custom uniforms and its params file:
+
+`example.frag`:
+```glsl
+precision highp float;
+
+uniform vec2 u_resolution;
+uniform float u_time;
+uniform float u_speed;
+uniform vec3 u_color;
+
+void main() {
+    vec2 uv = gl_FragCoord.xy / u_resolution;
+    float wave = sin(uv.x * 10.0 + u_time * u_speed) * 0.5 + 0.5;
+    vec3 col = mix(vec3(0.0), u_color, wave);
+    gl_FragColor = vec4(col, 1.0);
+}
+```
+
+`example.params.json`:
+```json
+{
+  "version": 1,
+  "uniforms": {
+    "u_speed": {
+      "type": "float",
+      "label": "Speed",
+      "default": 2.0,
+      "min": 0.0,
+      "max": 5.0,
+      "step": 0.1,
+      "group": "Animation"
+    },
+    "u_color": {
+      "type": "color",
+      "label": "Color",
+      "default": [0.2, 0.6, 1.0],
+      "group": "Color"
+    }
+  }
+}
+```
+
+Key points:
+- `precision highp float;` is **mandatory** — WebGL fragment shaders will not compile without it.
+- Every custom `uniform` beyond the base set must have an entry in `name.params.json`.
+- The `group` field organizes controls into labeled sections in the UI.
+
+For a more complex reference with 16 uniforms, noise functions, color pickers, and multi-layer rendering, study the bundled example: `examples/shaders/pool_wave.frag` + `pool_wave.params.json`.
 
 ## Reporting format
 
