@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.3 (2026-05-14)
+
+### Bug fixes
+
+- **Fixed params.json and presets.json 404 on global install** — `serveJsonFile` was missing the `__dirname` fallback that `serveShaderFile` had, so bundled param/preset files couldn't be found outside the project root.
+  - `preview-server.mjs`: added `__dirname` fallback to `serveJsonFile`
+
 ## 0.2.2 (2026-05-14)
 
 ### Bug fixes

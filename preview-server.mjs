@@ -189,6 +189,20 @@ async function serveJsonFile(req, res, shaderPath, suffix) {
     res.end(content);
   } catch (err) {
     if (err.code === "ENOENT") {
+      // Fallback: if relative path not in project root, try the extension's own directory
+      if (!path.isAbsolute(jsonPath)) {
+        const altResolved = path.join(__dirname, jsonPath);
+        try {
+          const content = await fs.readFile(altResolved, "utf-8");
+          JSON.parse(content);
+          res.writeHead(200, {
+            "Content-Type": "application/json; charset=utf-8",
+            "Cache-Control": "no-cache",
+          });
+          res.end(content);
+          return;
+        } catch { /* fall through to 404 */ }
+      }
       res.writeHead(404);
       res.end(`${suffix} not found for this shader`);
     } else if (err instanceof SyntaxError) {
