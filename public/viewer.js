@@ -75,6 +75,18 @@ let hiddenStartedAt = 0;
 let manualPaused = false;
 let manualPausedStartedAt = 0;
 
+/** Extract a stable key from a shader path for comparison across tabs.
+ *  Uses the last 3 segments (e.g. "examples/shaders/pool_wave.frag")
+ *  so symlinks and different absolute prefixes don't clash. */
+function extractShaderKey(filePath) {
+  if (!filePath) return "";
+  // Normalize backslashes to forward slashes
+  const normalized = filePath.replace(/\\/g, "/");
+  const parts = normalized.split("/");
+  // Use last 3 parts: "examples/shaders/pool_wave.frag"
+  return parts.slice(-3).join("/").toLowerCase();
+}
+
 // ─── Vertex shader (fixed) ──────────────────────────────────
 const VERTEX_SHADER_SRC = `
 attribute vec2 a_position;
@@ -188,7 +200,13 @@ async function init() {
     previewChannel.addEventListener("message", (event) => {
       const data = event.data || {};
       if (data.type === "viewer-opened" && data.instanceId !== previewInstanceId) {
-        supersedePreview(data.shader || "another shader");
+        // Normalize paths: compare only the shader filename + parent folder
+        // so symlinks and different absolute paths to the same file don't clash
+        const myKey = extractShaderKey(currentShaderPath);
+        const theirKey = extractShaderKey(data.shader);
+        if (myKey !== theirKey) {
+          supersedePreview(data.shader || "another shader");
+        }
       }
     });
     previewChannel.postMessage({

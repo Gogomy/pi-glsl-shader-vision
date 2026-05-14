@@ -33,13 +33,47 @@ Not allowed inside this skill/tool:
 
 Decide what the user can control. **Every visually meaningful value must be a uniform.**
 
-- What parameters should be adjustable? (speed, color, intensity, scale, duration, size, decay, flash, etc.)
+- What parameters should be adjustable? (speed, color, intensity, scale, duration, size, decay, flash, count, etc.)
 - Does every adjustable parameter have a corresponding `uniform` in the shader?
 - Will there be a `name.params.json` with an entry for each custom uniform?
 - Does the shader start with `precision highp float;`?
 - If using triggers: does the shader check `if (trigger < 0.0)` to skip before first press? Is the first frame visible (alpha > 0 at progress=0)?
 
 **Golden rule: no magic numbers.** If a value affects the visual output (speed, radius, color, alpha, threshold, count, etc.), expose it. A shader that the user cannot tweak is useless for testing. Study `examples/shaders/trigger_effect.frag` for a model of full parameter exposure.
+
+#### Creating `params.json` correctly
+
+**The `type` field in `params.json` must match the GLSL uniform declaration — not the code's usage.**
+
+If the shader has `uniform float u_count`, the params entry must be `"type":"float"` — NOT `"int"` even if the shader does `int count = int(u_count)`. A type mismatch causes `uniform1i` instead of `uniform1f`, the uniform stays at 0, and loops or conditions break silently (black screen).
+
+Copy the type from the GLSL source:
+
+| GLSL declaration | params.json `type` |
+|---|---|
+| `uniform float x` | `"float"` |
+| `uniform int x` | `"int"` |
+| `uniform vec3 x` | `"color"` |
+| `uniform vec4 x` | `"color_alpha"` |
+
+**Without `params.json`**, every custom uniform defaults to 0 — shaders that depend on non-zero values (loop counts, scales, speeds) produce black or invisible output.
+
+#### Precision declaration
+
+Always put `precision highp float;` as the **first line** of the fragment shader. Do NOT rely on `#ifdef GL_ES / precision mediump float;` — it is not honored reliably in all WebGL contexts. Without an explicit precision declaration, the GLSL compiler may reject the shader.
+
+#### Trigger shader fade behavior
+
+Use **fade-out formulas** for the effect to be visible immediately:
+
+```glsl
+// ✓ Correct — visible at progress=0, fades naturally
+float alpha = 1.0 - progress;
+float alpha = exp(-progress * 3.0);
+
+// ✗ Wrong — smoothstep(0, X, 0) always returns 0 at progress=0
+float alpha = smoothstep(0.0, 0.18, progress); // fades IN, invisible at start
+```
 
 #### Trigger shader checklist
 

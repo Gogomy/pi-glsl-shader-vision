@@ -1,6 +1,6 @@
 {
   "name": "@gogomi/pi-glsl-shader-vision",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "type": "module",
   "description": "GLSL fragment shader viewer for Pi Agent — live WebGL preview, Tweakpane uniform controls, presets, probe sheets & video export",
   "repository": {
@@ -43,7 +43,7 @@
     "examples/shaders/trigger_effect.presets.json"
   ],
   "peerDependencies": {
-    "@mariozechner/pi-coding-agent": "*"
+    "@earendil-works/pi-coding-agent": "*"
   },
   "devDependencies": {
     "typescript": "^6.0.3"

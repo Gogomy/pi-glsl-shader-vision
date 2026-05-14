@@ -100,19 +100,28 @@ export default function glslShaderVision(pi: ExtensionAPI) {
   });
 
   pi.registerCommand("glsl-test", {
-    description: "Open bundled test shader (pool_wave) from the installed package",
+    description: "Open bundled test shader (pool_wave)",
     handler: async (_args, ctx) => {
+      // Try relative path first — gives a clean URL in dev repos
+      const relResolved = resolveShaderPath(ctx.cwd, BUNDLED_TEST_SHADER_REL);
+      let shaderPath: string;
       try {
-        await fs.access(BUNDLED_TEST_SHADER_ABS);
+        await fs.access(relResolved);
+        shaderPath = BUNDLED_TEST_SHADER_REL;
       } catch {
-        ctx.ui.notify(`Bundled test shader not found: ${BUNDLED_TEST_SHADER_ABS}`, "error");
-        return;
+        // Fall back to absolute path (production / npm global install)
+        try {
+          await fs.access(BUNDLED_TEST_SHADER_ABS);
+          shaderPath = BUNDLED_TEST_SHADER_ABS;
+        } catch {
+          ctx.ui.notify(`Bundled test shader not found`, "error");
+          return;
+        }
       }
 
       try {
         const port = await ensureServer(ctx.cwd);
-        // Use absolute path so the server resolves it from the extension dir
-        const url = buildViewerUrl(port, BUNDLED_TEST_SHADER_ABS);
+        const url = buildViewerUrl(port, shaderPath);
         ctx.ui.notify(`GLSL test shader ready:\n${url}`, "info");
       } catch (err) {
         ctx.ui.notify(`Failed to start viewer server: ${(err as Error).message}`, "error");

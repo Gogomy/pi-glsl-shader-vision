@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.2.1 (2026-05-14)
+
+### Bug fixes
+
+- **Fixed `peerDependencies` package name** — changed from `@mariozechner/pi-coding-agent` to `@earendil-works/pi-coding-agent` to match the current Pi agent package scope.
+  - `package.json`: updated `peerDependencies` field.
+
+- **Fixed false preview supersession on symlinked/absolute paths** — `viewer.js` now compares shaders by their last 3 path segments (`extractShaderKey`) instead of raw strings, preventing different absolute paths or symlinks pointing to the same file from incorrectly closing each other's previews.
+  - `public/viewer.js`: added `extractShaderKey()` and updated `BroadcastChannel` handler.
+
+### Improvements
+
+- **`/glsl-test` quick route in preview server** — the preview server now handles `GET /glsl-test` directly, redirecting to the bundled `pool_wave.frag` demo shader without needing a command invocation.
+  - `preview-server.mjs`: added `/glsl-test` handler with relative-path-first fallback logic.
+
+- **`/glsl-test` command uses relative path first** — `index.ts` now tries the relative path (`examples/shaders/pool_wave.frag`) before falling back to the absolute bundled path, producing cleaner URLs and working correctly in both dev repos and npm global installs.
+  - `index.ts`: updated `glsl-test` handler with dual-path resolution.
+
+- **SKILL.md proactive guidance in Step 0** — added structured how-to sections:
+  - `params.json` type matching table (GLSL → params.json type mapping)
+  - Precision declaration: always use `precision highp float;` as first line
+  - Trigger shader fade behavior: `1.0 - progress` / `exp(-progress * N)` for fade-out
+
 ## 0.2.0 (2026-05-13)
 
 ### New feature: button trigger uniform

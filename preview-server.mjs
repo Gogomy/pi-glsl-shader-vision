@@ -450,6 +450,28 @@ async function handleRequest(req, res) {
     return deletePreset(req, res);
   }
 
+  // ── Quick test route: /glsl-test → demo shader ──
+  if (pathname === "/glsl-test") {
+    // Try relative path first (clean URL, works in dev repos)
+    const relPath = "examples/shaders/pool_wave.frag";
+    const resolved = resolveShaderPath(relPath);
+    let shaderPath = null;
+    if (resolved) {
+      try {
+        await fs.access(resolved);
+        shaderPath = relPath;
+      } catch { /* not found relative to project root */ }
+    }
+    // Fall back to bundled absolute path (production / npm global install)
+    if (!shaderPath) {
+      shaderPath = path.join(__dirname, "examples", "shaders", "pool_wave.frag");
+    }
+    const params = new URLSearchParams({ shader: shaderPath });
+    res.writeHead(302, { Location: `/?${params.toString()}` });
+    res.end();
+    return;
+  }
+
   // ── 404 ──
   res.writeHead(404);
   res.end("Not found");
