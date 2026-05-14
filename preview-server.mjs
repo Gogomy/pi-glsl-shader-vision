@@ -142,6 +142,20 @@ async function serveShaderFile(req, res, shaderPath) {
     res.end(content);
   } catch (err) {
     if (err.code === "ENOENT") {
+      // Fallback: if relative path not in project root, try the extension's own directory
+      // (for bundled shaders like pool_wave.frag in npm global install)
+      if (!path.isAbsolute(shaderPath)) {
+        const altResolved = path.join(__dirname, shaderPath);
+        try {
+          const content = await fs.readFile(altResolved, "utf-8");
+          res.writeHead(200, {
+            "Content-Type": "text/plain; charset=utf-8",
+            "Cache-Control": "no-cache",
+          });
+          res.end(content);
+          return;
+        } catch { /* fall through to 404 */ }
+      }
       res.writeHead(404);
       res.end(`Shader not found: ${shaderPath}`);
     } else {
@@ -452,20 +466,9 @@ async function handleRequest(req, res) {
 
   // ── Quick test route: /glsl-test → demo shader ──
   if (pathname === "/glsl-test") {
-    // Try relative path first (clean URL, works in dev repos)
-    const relPath = "examples/shaders/pool_wave.frag";
-    const resolved = resolveShaderPath(relPath);
-    let shaderPath = null;
-    if (resolved) {
-      try {
-        await fs.access(resolved);
-        shaderPath = relPath;
-      } catch { /* not found relative to project root */ }
-    }
-    // Fall back to bundled absolute path (production / npm global install)
-    if (!shaderPath) {
-      shaderPath = path.join(__dirname, "examples", "shaders", "pool_wave.frag");
-    }
+    // Always use a short relative path — the server falls back to __dirname if
+    // the file is not in the project root (works for both local dev and global installs).
+    const shaderPath = "examples/shaders/pool_wave.frag";
     const params = new URLSearchParams({ shader: shaderPath });
     res.writeHead(302, { Location: `/?${params.toString()}` });
     res.end();

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.2 (2026-05-14)
+
+### Bug fixes
+
+- **Fixed `/glsl-test` failing with 404 on global install** — the command was building a URL with a long absolute Windows path that got truncated. Fixed by:
+  - `index.ts`: command handler now uses the short server route URL `http://127.0.0.1:{port}/glsl-test` instead of passing the shader path in the URL
+  - `preview-server.mjs`: `/glsl-test` route always uses clean relative path; `serveShaderFile` falls back to `__dirname` when the shader doesn't exist in the project root
+
 ## 0.2.1 (2026-05-14)
 
 ### Bug fixes
@@ -13,10 +21,7 @@
 ### Improvements
 
 - **`/glsl-test` quick route in preview server** — the preview server now handles `GET /glsl-test` directly, redirecting to the bundled `pool_wave.frag` demo shader without needing a command invocation.
-  - `preview-server.mjs`: added `/glsl-test` handler with relative-path-first fallback logic.
-
-- **`/glsl-test` command uses relative path first** — `index.ts` now tries the relative path (`examples/shaders/pool_wave.frag`) before falling back to the absolute bundled path, producing cleaner URLs and working correctly in both dev repos and npm global installs.
-  - `index.ts`: updated `glsl-test` handler with dual-path resolution.
+  - `preview-server.mjs`: added `/glsl-test` handler.
 
 - **SKILL.md proactive guidance in Step 0** — added structured how-to sections:
   - `params.json` type matching table (GLSL → params.json type mapping)
