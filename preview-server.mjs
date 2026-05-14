@@ -18,8 +18,11 @@ import chokidar from "chokidar";
 
 // ─── Configuration ───────────────────────────────────────────
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const PUBLIC_DIR = path.join(__dirname, "public");
+const BUNDLED_PUBLIC_DIR = path.join(__dirname, "public");
 const DEFAULT_PORT = 5177;
+
+// Public dir: defaults to bundled, overridden if project root has its own public/
+let PUBLIC_DIR = BUNDLED_PUBLIC_DIR;
 
 // Project root — dynamically configurable via startServer().
 // Fallback to process.cwd() so CLI usage still works.
@@ -464,6 +467,18 @@ async function startServer(port, projectRoot) {
   }
 
   const root = getProjectRoot();
+
+  // Detect dev repo: if project root has its own public/, use it
+  // instead of the bundled one. This allows development on the repo
+  // without editing files in the global npm install.
+  const repoPublic = path.join(root, "public");
+  try {
+    await fs.access(path.join(repoPublic, "viewer.js"));
+    PUBLIC_DIR = repoPublic;
+    console.log(`[glsl-shader-vision] Using public dir: ${repoPublic}`);
+  } catch {
+    PUBLIC_DIR = BUNDLED_PUBLIC_DIR;
+  }
 
   return new Promise((resolve, reject) => {
     server.on("error", (err) => {

@@ -33,6 +33,7 @@ let frameCount = 0;
 let fpsFrames = 0;
 let fpsLastTime = 0;
 let currentFps = 0;
+let currentShaderTime = 0;  // shader time, used by button triggers
 
 // Mouse
 let mouseX = 0;
@@ -542,6 +543,7 @@ function applyDefaultForUniform(name, meta) {
     case "color_alpha": uniformValues[name] = arrayToColor(defVal ?? [1, 1, 1, 1], true); break;
     case "vec2": uniformValues[name] = { x: defVal?.[0] ?? 0, y: defVal?.[1] ?? 0 }; break;
     case "enum": uniformValues[name] = defVal ?? 0; break;
+    case "button": uniformValues[name] = -1.0; break;
     default: uniformValues[name] = defVal ?? 0; break;
   }
 }
@@ -605,6 +607,21 @@ function addControl(folder, item) {
       folder.addInput(uniformValues, name, {
         label: label || name,
         options: options || {},
+      });
+      break;
+
+    case "button":
+      uniformValues[name] = -1.0;
+      folder.addButton({ title: label || name }).on("click", () => {
+        uniformValues[name] = currentShaderTime;
+        if (pane) pane.refresh();
+        // If paused, auto-unpause so the animation plays immediately
+        if (manualPaused && !probeMode && !previewSuperseded) {
+          manualPaused = false;
+          manualPausedStartedAt = 0;
+          updatePlayPauseButton();
+          startLiveLoop();
+        }
       });
       break;
 
@@ -700,6 +717,7 @@ function getUniformGLType(meta) {
     case "color_alpha": return "vec4";
     case "vec2":        return "vec2";
     case "vec3":        return "vec3";
+    case "button":      return "float";
     default:            return null;
   }
 }
@@ -740,6 +758,8 @@ function applyPreset(presetValues) {
         break;
       case "vec2":
         if (Array.isArray(value)) uniformValues[name] = { x: value[0] ?? 0, y: value[1] ?? 0 };
+        break;
+      case "button":
         break;
       default:
         uniformValues[name] = value;
@@ -911,6 +931,7 @@ function renderOneFrame(now) {
   if (!gl || !program) return;
 
   const time = (now - startTime) / 1000;
+  currentShaderTime = time;
   const delta = 0.016;
 
   gl.useProgram(program);
@@ -957,6 +978,7 @@ function loop(now) {
   if (!gl || !program) return;
 
   const time = (now - startTime) / 1000;
+  currentShaderTime = time;
   const delta = Math.min((now - lastTime) / 1000, 0.1);
   lastTime = now;
   frameCount++;

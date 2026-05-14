@@ -7,7 +7,7 @@ Local WebGL viewer for GLSL `.frag` fragment shaders, integrated as a [Pi Agent]
 ## Features
 
 - **Animated WebGL preview** of fragment shaders
-- **UI controls** generated from `.params.json` (sliders, colors, checkboxes, dropdowns)
+- **UI controls** generated from `.params.json` (sliders, colors, checkboxes, dropdowns, trigger buttons)
 - **Presets** to save and switch between visual variants
 - **Hot reload** when editing `.frag` or `.params.json`
 - **Shadertoy mode** — auto-detects `mainImage()` and wraps it
@@ -54,9 +54,10 @@ Reload Pi after install: `/reload`
 
 ## Examples
 
-| Shader           | Description                                                                  |
-| ---------------- | ---------------------------------------------------------------------------- |
-| `pool_wave.frag` | Voronoi-based water, 3 layers, noise, pixelated — **14 controls, 3 presets** |
+| Shader              | Description                                                                             |
+| ------------------- | --------------------------------------------------------------------------------------- |
+| `pool_wave.frag`    | Voronoi-based water, 3 layers, noise, pixelated — **16 controls, 3 presets**            |
+| `trigger_effect.frag` | Particle burst + shockwave ring, 2 independent triggers — **14 controls, button demo** |
 
 ## Structure
 

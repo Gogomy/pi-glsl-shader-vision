@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "active": "default",
+  "presets": {
+    "default": {
+      "u_duration": 2.0,
+      "u_a_speed": 1.0,
+      "u_a_size": 1.0,
+      "u_a_flash": 0.7,
+      "u_a_decay": 2.0,
+      "u_color_a": [1.0, 0.4, 0.1],
+      "u_b_speed": 1.0,
+      "u_b_width": 1.0,
+      "u_b_trail": 1.0,
+      "u_b_flash": 0.4,
+      "u_color_b": [0.1, 0.7, 1.0]
+    }
+  }
+}

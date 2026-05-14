@@ -1,6 +1,6 @@
 {
   "name": "@gogomi/pi-glsl-shader-vision",
-  "version": "0.1.11",
+  "version": "0.2.0",
   "type": "module",
   "description": "GLSL fragment shader viewer for Pi Agent — live WebGL preview, Tweakpane uniform controls, presets, probe sheets & video export",
   "repository": {
@@ -37,7 +37,10 @@
     "skills/glsl-shader-vision/SKILL.md",
     "examples/shaders/pool_wave.frag",
     "examples/shaders/pool_wave.params.json",
-    "examples/shaders/pool_wave.presets.json"
+    "examples/shaders/pool_wave.presets.json",
+    "examples/shaders/trigger_effect.frag",
+    "examples/shaders/trigger_effect.params.json",
+    "examples/shaders/trigger_effect.presets.json"
   ],
   "peerDependencies": {
     "@mariozechner/pi-coding-agent": "*"

@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.2.0 (2026-05-13)
+
+### New feature: button trigger uniform
+
+- **New `button` uniform type** — renders a clickable trigger button in the UI. When pressed, sets the uniform to the current shader time, allowing shaders to implement fire-and-forget animations with start/end (explosions, shockwaves, power-ups, transitions).
+  - `public/viewer.js`: `case "button"` added to `addControl()`, `applyDefaultForUniform()`, `getUniformGLType()`, `applyPreset()`.
+  - Default value `-1.0` (not triggered).
+  - Auto-unpauses the viewer when pressed in paused mode.
+  - Uses shader time (not wall-clock) for correct pause/resume behavior.
+  - Buttons are excluded from presets (triggers, not state).
+
+### New example: trigger_effect.frag
+
+- **`examples/shaders/trigger_effect.frag`** — demonstrates two independent button triggers in the same shader:
+  - **Burst A**: particle explosion, 20 particles flying outward with configurable speed, size, flash, and decay.
+  - **Shockwave B**: expanding ring with trail, secondary ring, configurable width, speed, and flash.
+  - **14 exposed uniforms** across 5 UI groups (Triggers, Timing, Burst params, Shockwave params).
+  - Companion files: `trigger_effect.params.json`, `trigger_effect.presets.json`.
+
+### Documentation
+
+- **SKILL.md**: Added `button` to supported uniform types table with full documentation. Added "Trigger shader checklist" in Step 0. Added "Full parameter exposure" example section. Enforced "no magic numbers" rule.
+- **README.md**: Added `trigger_effect` to examples table. Updated features list.
+
+### Dev workflow
+
+- **`.pi/extensions/glsl-shader-vision/index.ts`** — local development entry point so pi loads the extension from the repo instead of the global npm package. Editing `viewer.js` and `preview-server.mjs` in the repo now reflects immediately.
+- **`preview-server.mjs`** — auto-detects repo's `public/` directory at startup, falling back to bundled files.
+
 ## 0.1.11 (2026-05-13)
 
 ### Skill improvements (post-mortem from shader-error-report.md)
